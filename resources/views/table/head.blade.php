@@ -1,4 +1,4 @@
-<thead class="bg-gray-50">
+<thead class="bg-gray">
     <tr>
         @if($hasBulkActions = $table->hasBulkActions())
             <th width="64" class="px-6 py-3 text-xs">
@@ -9,7 +9,7 @@
         @foreach($table->columns() as $column)
             <th
                 v-show="table.columnIsVisible(@js($column->key))"
-                class="@if($loop->first && $hasBulkActions) pr-6 @else px-6 @endif py-3 text-left text-xs font-medium tracking-wide text-gray-500 {{ $column->classes }}"
+                class="@if($loop->first && $hasBulkActions) pr-6 @else px-6 @endif py-3 text-left text-xs font-medium tracking-wide text-gray-500 dark:text-white {{ $column->classes }} bg-grey"
             >
                 @if($column->sortable)
                     <a @click.exact.prevent="table.navigate(@js($sortByUrl = $sortBy($column)))" dusk="sort-{{ $column->key }}" href="{{ $sortByUrl }}">
@@ -34,6 +34,18 @@
                 @if($column->sortable)
                     </a>
                 @endif
+                @foreach($table->searchInputs() as $searchInput)
+            @if($searchInput->key === $column->key)
+            <input
+                name="searchInput-{{ $searchInput->key }}"
+                value="{{ $searchInput->value }}"
+                type="text"
+                class="flex-1 min-w-0 block w-full text-gray-900 px-3 py-2 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-sm border-gray-300"
+                v-bind:class="{ 'opacity-50': table.isLoading }"
+                v-bind:disabled="table.isLoading"
+                @input="table.debounceUpdateQuery('filter[{{ $searchInput->key }}]', $event.target.value, $event.target)" />
+            @endif
+            @endforeach
             </th>
         @endforeach
     </tr>

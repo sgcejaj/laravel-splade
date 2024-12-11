@@ -46,9 +46,11 @@ class TableExporter implements FromQuery, Responsable, ShouldAutoSize, WithColum
      */
     private function columns(): Collection
     {
-        return $this->table->columns()->reject(function (Column $column) {
-            return $column->exportAs === false;
+        $ddd=$this->table->columns()->reject(function (Column $column) {
+            return $column->exportAs === false || $column->hidden === true;
         })->values();
+      
+        return $ddd;
     }
 
     /**

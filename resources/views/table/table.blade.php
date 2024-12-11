@@ -14,21 +14,9 @@
             @if($hasControls())
                 @include('splade::table.controls')
             @endif
-
-            @foreach($table->searchInputs() as $searchInput)
-                @includeUnless($searchInput->key === 'global', 'splade::table.search-row')
-            @endforeach
-
             <x-splade-component is="table-wrapper">
-                <table class="min-w-full divide-y divide-gray-200 bg-white">
-                    @unless($headless)
-                        @isset($head)
-                            {{ $head }}
-                        @elseif(count($table->resource))
-                            @include('splade::table.head')
-                        @endisset
-                    @endunless
-
+                <table class="min-w-full divide-y divide-gray-200 bg-grey">
+                  @include('splade::table.head')
                     @isset($body)
                         {{ $body }}
                     @else
@@ -36,7 +24,6 @@
                     @endisset
                 </table>
             </x-splade-component>
-
             @if($showPaginator())
                 {{ $table->resource->links($paginationView, ['table' => $table, 'hasPerPageOptions' => $hasPerPageOptions()]) }}
             @endif
